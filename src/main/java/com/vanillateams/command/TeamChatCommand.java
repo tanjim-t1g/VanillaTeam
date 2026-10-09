@@ -1,0 +1,45 @@
+package com.vanillateams.command;
+
+import com.vanillateams.VanillaTeams;
+import com.vanillateams.manager.TeamManager;
+import com.vanillateams.model.Team;
+import com.vanillateams.util.MessageUtil;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+public class TeamChatCommand implements CommandExecutor {
+    private final VanillaTeams plugin;
+    private final TeamManager teamManager;
+
+    public TeamChatCommand(VanillaTeams plugin, TeamManager teamManager) {
+        this.plugin = plugin;
+        this.teamManager = teamManager;
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(MessageUtil.parse(plugin.msg("player-only")));
+            return true;
+        }
+
+        Team team = teamManager.getPlayerTeam(player);
+        if (team == null) {
+            plugin.sendPrefixed(player, plugin.msg("not-in-team"));
+            return true;
+        }
+
+        if (args.length == 0) {
+            boolean toggled = teamManager.toggleTeamChat(player.getUniqueId());
+            plugin.sendPrefixed(player, toggled ? plugin.msg("chat-toggled-on") : plugin.msg("chat-toggled-off"));
+            return true;
+        }
+
+        String msg = String.join(" ", args);
+        teamManager.sendTeamChat(team, player, msg);
+        return true;
+    }
+}

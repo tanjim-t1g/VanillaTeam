@@ -1,0 +1,75 @@
+settings:
+  min-name-length: 2
+  max-name-length: 16
+  max-members: 10
+  invite-expire-seconds: 60
+  ally-request-expire-seconds: 60
+  default-team-pvp: true
+  pvp-vote-timeout-seconds: 30
+
+messages:
+  prefix: "&8[&7Team&8] "
+  ally-prefix: "&8[&7Ally&8] "
+  chat-format: "&8[&7TC&8] &f<player>&8: &7<message>"
+  ally-chat-format: "&8[&7AC&8] &8[&7<team>&8] &f<player>&8: &7<message>"
+
+  player-only: "&7This command is for players only."
+  no-permission: "&7You don't have permission to do that."
+  reloaded: "&7Config reloaded."
+
+  team-created: "&7Created &f<team>&7."
+  team-disbanded: "&f<team> &7has been disbanded."
+  already-in-team: "&7You're already in a team."
+  not-in-team: "&7You're not in a team."
+  not-leader: "&7Only the leader can do that."
+  team-exists: "&f<team> &7already exists."
+  team-not-found: "&7Couldn't find team &f<team>&7."
+  invalid-name: "&7Name must be &f<min>-<max> &7characters (letters, numbers, underscores)."
+  team-full: "&7Team is full (&f<max>&7)."
+
+  invite-sent: "&7Invited &f<player>&7."
+  invite-received: "&7You've been invited to &f<team>&7. "
+  already-invited: "&f<player> &7already has a pending invite."
+  target-in-team: "&f<player> &7is already in a team."
+  player-not-found: "&f<player> &7is not online."
+  no-pending-invite: "&7You don't have a pending invite."
+  invite-denied: "&7Denied the invite from &f<team>&7."
+  invite-denied-notify: "&f<player> &7declined your invite."
+  member-joined: "&f<player> &7joined."
+  member-left: "&f<player> &7left."
+  leader-cannot-leave: "&7Transfer leadership first (&f/team leader <player>&7) or &f/team disband&7."
+  member-kicked: "&f<player> &7was kicked."
+  kicked-notify: "&7You were kicked from &f<team>&7."
+  not-in-your-team: "&f<player> &7isn't in your team."
+  cannot-kick-self: "&7You can't kick yourself."
+  leader-transferred: "&f<player> &7is the new leader."
+
+  pvp-status: "&7Team PvP: &f<state>"
+  pvp-changed: "&7Team PvP is now <state>&7."
+  pvp-vote-started: "&f<player> &7wants to set Team PvP to <state>&7. "
+  pvp-vote-cast: "&f<player> &7voted <vote>&7."
+  pvp-vote-passed: "&7Vote passed &8(&f<yes> &7yes, &f<no> &7no&8)&7. Team PvP is now <state>&7."
+  pvp-vote-failed: "&7Vote didn't pass &8(&f<yes> &7yes, &f<no> &7no&8)&7. Team PvP stays <state>&7."
+  pvp-vote-already-active: "&7There's already a vote going on."
+  pvp-already-voted: "&7You already voted."
+  pvp-no-active-vote: "&7No vote is happening right now."
+  pvp-not-eligible: "&7You can't vote on this."
+  pvp-already-set: "&7Team PvP is already <state>&7."
+  friendly-fire-blocked: "&7Friendly fire is off."
+
+  chat-toggled-on: "&7Team chat: &fON"
+  chat-toggled-off: "&7Team chat: &fOFF"
+  ally-chat-toggled-on: "&7Ally chat: &fON"
+  ally-chat-toggled-off: "&7Ally chat: &fOFF"
+
+  ally-request-sent: "&7Sent ally request to &f<team>&7."
+  ally-request-received: "&f<team> &7wants to ally. "
+  ally-accepted: "&7Now allied with &f<team>&7."
+  ally-denied: "&7Denied ally request from &f<team>&7."
+  ally-denied-notify: "&f<team> &7turned down your ally request."
+  ally-broken: "&7Alliance with &f<team> &7is over."
+  already-have-ally: "&7You already have an ally (&f<ally>&7)."
+  target-has-ally: "&f<team> &7already has an ally."
+  no-ally: "&7Your team doesn't have an ally."
+  no-ally-request: "&7No pending ally request."
+  cannot-ally-self: "&7You can't ally with your own team."

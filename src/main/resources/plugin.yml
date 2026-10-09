@@ -1,0 +1,39 @@
+name: VanillaTeams
+version: '${project.version}'
+main: com.vanillateams.VanillaTeams
+api-version: '1.21'
+authors: [ tanjim ]
+description: Lightweight, vanilla-friendly team plugin for Paper and Purpur.
+softdepend: [ DiscordSRV, MoonCycle ]
+
+commands:
+  team:
+    description: Manage your team
+    usage: /team <create|invite|accept|deny|leave|kick|leader|pvp|info|list|chat|disband>
+    permission: vanillateams.use
+  teams:
+    description: View all teams on the server
+    usage: /teams
+    permission: vanillateams.use
+  tc:
+    description: Send a message to team chat or toggle team chat
+    usage: /tc [message]
+    aliases: [ teamchat ]
+    permission: vanillateams.use
+  ac:
+    description: Send a message to ally chat or toggle ally chat
+    usage: /ac [message]
+    aliases: [ allychat ]
+    permission: vanillateams.use
+  ally:
+    description: Manage your team alliance
+    usage: /ally <team|accept|deny|break|chat>
+    permission: vanillateams.use
+
+permissions:
+  vanillateams.use:
+    description: Allows players to use standard team and ally commands
+    default: true
+  vanillateams.admin:
+    description: Allows admins to force-disband teams and reload configuration
+    default: op
