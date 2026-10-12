@@ -57,6 +57,19 @@ public class AllyCommand implements CommandExecutor, TabCompleter {
                 plugin.sendAllyPrefixed(player, toggled ? plugin.msg("ally-chat-toggled-on") : plugin.msg("ally-chat-toggled-off"));
                 return true;
             }
+            if (args.length == 2) {
+                String arg = args[1].toLowerCase();
+                if (arg.equals("on") || arg.equals("enable") || arg.equals("true")) {
+                    teamManager.setAllyChatToggled(player.getUniqueId(), true);
+                    plugin.sendAllyPrefixed(player, plugin.msg("ally-chat-toggled-on"));
+                    return true;
+                }
+                if (arg.equals("off") || arg.equals("disable") || arg.equals("false")) {
+                    teamManager.setAllyChatToggled(player.getUniqueId(), false);
+                    plugin.sendAllyPrefixed(player, plugin.msg("ally-chat-toggled-off"));
+                    return true;
+                }
+            }
             String msg = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
             teamManager.sendAllyChat(team, player, msg);
             return true;
@@ -182,6 +195,11 @@ public class AllyCommand implements CommandExecutor, TabCompleter {
             }
             return suggestions.stream()
                     .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        if (args.length == 2 && (args[0].equalsIgnoreCase("chat") || args[0].equalsIgnoreCase("c"))) {
+            return List.of("on", "off").stream()
+                    .filter(s -> s.startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();

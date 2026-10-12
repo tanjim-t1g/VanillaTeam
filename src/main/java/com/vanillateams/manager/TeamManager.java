@@ -5,6 +5,7 @@ import com.vanillateams.data.DatabaseManager;
 import com.vanillateams.model.Team;
 import com.vanillateams.util.MessageUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -208,6 +209,15 @@ public class TeamManager {
         }
     }
 
+    public void setTeamChatToggled(UUID uuid, boolean enabled) {
+        if (enabled) {
+            teamChatToggled.add(uuid);
+            allyChatToggled.remove(uuid);
+        } else {
+            teamChatToggled.remove(uuid);
+        }
+    }
+
     public boolean isTeamChatToggled(UUID uuid) {
         return teamChatToggled.contains(uuid);
     }
@@ -227,6 +237,15 @@ public class TeamManager {
         }
     }
 
+    public void setAllyChatToggled(UUID uuid, boolean enabled) {
+        if (enabled) {
+            allyChatToggled.add(uuid);
+            teamChatToggled.remove(uuid);
+        } else {
+            allyChatToggled.remove(uuid);
+        }
+    }
+
     public boolean isAllyChatToggled(UUID uuid) {
         return allyChatToggled.contains(uuid);
     }
@@ -236,11 +255,21 @@ public class TeamManager {
     }
 
     public void sendTeamChat(Team team, Player sender, String message) {
-        String raw = plugin.getConfig().getString("messages.chat-format", "&8[&7TC&8] &f<player>&8: &7<message>")
+        String format = plugin.getConfig().getString("messages.chat-format", "&8[&7TC&8] &f<player>&8: &7<message>")
                 .replace("<player>", sender.getName())
-                .replace("<team>", team.getName())
-                .replace("<message>", message);
-        Component component = MessageUtil.parse(raw);
+                .replace("<team>", team.getName());
+
+        Component component;
+        if (format.contains("<message>")) {
+            String[] parts = format.split("<message>", 2);
+            Component prefix = MessageUtil.parse(parts[0]);
+            Component msgComp = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+            Component suffix = parts.length > 1 ? MessageUtil.parse(parts[1]) : Component.empty();
+            component = prefix.append(msgComp).append(suffix);
+        } else {
+            component = MessageUtil.parse(format).append(Component.text(" " + message));
+        }
+
         for (UUID memberId : team.getMemberIds()) {
             Player member = Bukkit.getPlayer(memberId);
             if (member != null && member.isOnline()) {
@@ -250,11 +279,20 @@ public class TeamManager {
     }
 
     public void sendAllyChat(Team senderTeam, Player sender, String message) {
-        String raw = plugin.getConfig().getString("messages.ally-chat-format", "&8[&7AC&8] &8[&7<team>&8] &f<player>&8: &7<message>")
+        String format = plugin.getConfig().getString("messages.ally-chat-format", "&8[&7AC&8] &8[&7<team>&8] &f<player>&8: &7<message>")
                 .replace("<player>", sender.getName())
-                .replace("<team>", senderTeam.getName())
-                .replace("<message>", message);
-        Component component = MessageUtil.parse(raw);
+                .replace("<team>", senderTeam.getName());
+
+        Component component;
+        if (format.contains("<message>")) {
+            String[] parts = format.split("<message>", 2);
+            Component prefix = MessageUtil.parse(parts[0]);
+            Component msgComp = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+            Component suffix = parts.length > 1 ? MessageUtil.parse(parts[1]) : Component.empty();
+            component = prefix.append(msgComp).append(suffix);
+        } else {
+            component = MessageUtil.parse(format).append(Component.text(" " + message));
+        }
 
         for (UUID memberId : senderTeam.getMemberIds()) {
             Player member = Bukkit.getPlayer(memberId);

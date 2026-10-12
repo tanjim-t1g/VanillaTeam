@@ -7,10 +7,14 @@ import com.vanillateams.util.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class TeamChatCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
+
+public class TeamChatCommand implements CommandExecutor, TabCompleter {
     private final VanillaTeams plugin;
     private final TeamManager teamManager;
 
@@ -38,8 +42,32 @@ public class TeamChatCommand implements CommandExecutor {
             return true;
         }
 
+        if (args.length == 1) {
+            String arg = args[0].toLowerCase();
+            if (arg.equals("on") || arg.equals("enable") || arg.equals("true")) {
+                teamManager.setTeamChatToggled(player.getUniqueId(), true);
+                plugin.sendPrefixed(player, plugin.msg("chat-toggled-on"));
+                return true;
+            }
+            if (arg.equals("off") || arg.equals("disable") || arg.equals("false")) {
+                teamManager.setTeamChatToggled(player.getUniqueId(), false);
+                plugin.sendPrefixed(player, plugin.msg("chat-toggled-off"));
+                return true;
+            }
+        }
+
         String msg = String.join(" ", args);
         teamManager.sendTeamChat(team, player, msg);
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("on", "off").stream()
+                    .filter(s -> s.startsWith(args[0].toLowerCase()))
+                    .toList();
+        }
+        return Collections.emptyList();
     }
 }

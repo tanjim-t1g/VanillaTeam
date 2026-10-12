@@ -52,12 +52,16 @@ public class VanillaTeams extends JavaPlugin {
 
         var tc = getCommand("tc");
         if (tc != null) {
-            tc.setExecutor(new TeamChatCommand(this, teamManager));
+            var tcCmd = new TeamChatCommand(this, teamManager);
+            tc.setExecutor(tcCmd);
+            tc.setTabCompleter(tcCmd);
         }
 
         var ac = getCommand("ac");
         if (ac != null) {
-            ac.setExecutor(new AllyChatCommand(this, teamManager));
+            var acCmd = new AllyChatCommand(this, teamManager);
+            ac.setExecutor(acCmd);
+            ac.setTabCompleter(acCmd);
         }
 
         var allyCmd = new AllyCommand(this, teamManager);

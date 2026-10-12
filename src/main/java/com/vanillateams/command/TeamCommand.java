@@ -431,6 +431,20 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
+        if (args.length == 2) {
+            String arg = args[1].toLowerCase();
+            if (arg.equals("on") || arg.equals("enable") || arg.equals("true")) {
+                teamManager.setTeamChatToggled(player.getUniqueId(), true);
+                plugin.sendPrefixed(player, plugin.msg("chat-toggled-on"));
+                return;
+            }
+            if (arg.equals("off") || arg.equals("disable") || arg.equals("false")) {
+                teamManager.setTeamChatToggled(player.getUniqueId(), false);
+                plugin.sendPrefixed(player, plugin.msg("chat-toggled-off"));
+                return;
+            }
+        }
+
         String msg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
         teamManager.sendTeamChat(team, player, msg);
     }
@@ -534,6 +548,9 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
             String sub = args[0].toLowerCase();
             return switch (sub) {
                 case "pvp" -> List.of("on", "off", "yes", "no").stream()
+                        .filter(s -> s.startsWith(args[1].toLowerCase()))
+                        .collect(Collectors.toList());
+                case "chat", "c" -> List.of("on", "off").stream()
                         .filter(s -> s.startsWith(args[1].toLowerCase()))
                         .collect(Collectors.toList());
                 case "info" -> teamManager.getAllTeams().stream()
