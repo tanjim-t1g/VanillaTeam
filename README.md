@@ -14,15 +14,57 @@ No `/team home`, no warps, and no virtual team chests. Just basic teams, team ch
 
 ## Features
 
-- **Vanilla Friendly**: Keeps the game vanilla. No teleporting, no free homes, and no virtual storage.
-- **Team Friendly Fire Voting**: Friendly fire is on by default. Any team member can start a vote with `/team pvp on` or `/team pvp off`, and online members vote using clickable `[Yes]` and `[No]` buttons.
-- **Low-Level Friendly Fire Cancellation**: Team friendly fire runs at the lowest event priority, ensuring teammates don't take damage from each other before other plugins even touch the damage event.
-- **Private Team & Ally Chat**:
-  - `/tc <message>` or `/tc` to toggle team chat.
-  - `/ac <message>` or `/ac` to toggle ally chat.
-- **DiscordSRV Support**: Team and ally chat are completely private and will never leak into public DiscordSRV channels.
-- **One Ally Per Team**: Teams can form a 1-to-1 alliance via `/ally <team>` with clickable `[Accept]` and `[Deny]` buttons.
-- **SQLite Database**: Automatically saves all teams, leaders, members, and usernames in `database.db`.
+<details>
+<summary><strong>Vanilla-friendly gameplay</strong></summary>
+
+Keeps survival simple and fair. No team homes, teleport commands, warps, or virtual team storage.
+
+</details>
+
+<details>
+<summary><strong>Friendly fire voting</strong></summary>
+
+Friendly fire is enabled by default. Any team member can start a vote using `/team pvp on` or `/team pvp off`. Online members can vote using clickable **[Yes]** and **[No]** buttons.
+
+</details>
+
+<details>
+<summary><strong>Friendly fire protection</strong></summary>
+
+Team damage is handled at the lowest event priority, allowing VanillaTeams to cancel friendly fire before other plugins process the damage event.
+
+</details>
+
+<details>
+<summary><strong>Private team and ally chat</strong></summary>
+
+- `/tc <message>` — Send a private team message.
+- `/tc` — Toggle team chat mode.
+- `/ac <message>` — Send a private ally message.
+- `/ac` — Toggle ally chat mode.
+
+</details>
+
+<details>
+<summary><strong>DiscordSRV support</strong></summary>
+
+Team and ally messages stay private and are not sent to public DiscordSRV channels.
+
+</details>
+
+<details>
+<summary><strong>Team alliances</strong></summary>
+
+Each team can have one allied team. Send an alliance request using `/ally <team>` and accept or deny it using clickable buttons.
+
+</details>
+
+<details>
+<summary><strong>SQLite database</strong></summary>
+
+Teams, leaders, members, and usernames are saved automatically in `database.db`, preserving team data across server restarts.
+
+</details>
 
 ---
 
