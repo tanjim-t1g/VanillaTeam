@@ -12,6 +12,7 @@ import com.vanillateams.listener.TeamCombatListener;
 import com.vanillateams.manager.TeamManager;
 import com.vanillateams.manager.VoteManager;
 import com.vanillateams.util.MessageUtil;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,6 +24,9 @@ public class VanillaTeams extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        int pluginId = 34842;
+        new Metrics(this, pluginId);
 
         databaseManager = new DatabaseManager(this);
         databaseManager.init();
