@@ -37,7 +37,7 @@ messages:
   invite-denied-notify: "&f<player> &7declined your invite."
   member-joined: "&f<player> &7joined."
   member-left: "&f<player> &7left."
-  leader-cannot-leave: "&7Transfer leadership first (&f/team leader <player>&7) or &f/team disband&7."
+  leader-cannot-leave: "&7Transfer leadership first (&f/team transfer <player>&7) or &f/team disband&7."
   member-kicked: "&f<player> &7was kicked."
   kicked-notify: "&7You were kicked from &f<team>&7."
   not-in-your-team: "&f<player> &7isn't in your team."

@@ -115,7 +115,7 @@ public class AllyCommand implements CommandExecutor, TabCompleter {
         plugin.sendAllyPrefixed(player, plugin.msg("ally-request-sent").replace("<team>", targetTeam.getName()));
 
         Component allyMsg = MessageUtil.parse(plugin.allyPrefix() + plugin.msg("ally-request-received").replace("<team>", senderTeam.getName()))
-                .append(MessageUtil.acceptDenyButtons("/ally accept", "/ally deny"));
+                .append(MessageUtil.acceptDenyButtons("/team ally accept", "/team ally deny"));
         for (UUID memberId : targetTeam.getMemberIds()) {
             Player member = Bukkit.getPlayer(memberId);
             if (member != null && member.isOnline()) {
@@ -188,20 +188,49 @@ public class AllyCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            return Collections.emptyList();
+        }
+
+        Team team = teamManager.getPlayerTeam(player.getUniqueId());
+        if (team == null) {
+            return Collections.emptyList();
+        }
+
         if (args.length == 1) {
-            List<String> suggestions = new ArrayList<>(List.of("accept", "deny", "break", "chat"));
-            for (Team t : teamManager.getAllTeams()) {
-                suggestions.add(t.getName());
+            List<String> suggestions = new ArrayList<>();
+            if (team.hasAlly()) {
+                if (team.isLeader(player.getUniqueId())) {
+                    suggestions.add("break");
+                }
+                suggestions.add("chat");
+            } else {
+                if (team.isLeader(player.getUniqueId())) {
+                    if (teamManager.getAllyRequest(team) != null) {
+                        suggestions.add("accept");
+                        suggestions.add("deny");
+                    }
+                    for (Team other : teamManager.getAllTeams()) {
+                        if (!other.getName().equalsIgnoreCase(team.getName()) && !other.hasAlly()) {
+                            suggestions.add(other.getName());
+                        }
+                    }
+                }
             }
             return suggestions.stream()
                     .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }
+
         if (args.length == 2 && (args[0].equalsIgnoreCase("chat") || args[0].equalsIgnoreCase("c"))) {
+            if (!team.hasAlly()) {
+                return Collections.emptyList();
+            }
             return List.of("on", "off").stream()
                     .filter(s -> s.startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
         }
+
         return Collections.emptyList();
     }
 }

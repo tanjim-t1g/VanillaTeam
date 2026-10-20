@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,8 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
             case "deny" -> handleDeny(player, args);
             case "leave" -> handleLeave(player);
             case "kick" -> handleKick(player, args);
-            case "leader", "transfer" -> handleLeader(player, args);
+            case "transfer", "leader" -> handleTransfer(player, args);
+            case "ally" -> handleAlly(player, args);
             case "pvp" -> handlePvp(player, args);
             case "chat", "c" -> handleChat(player, args);
             default -> sendHelp(sender);
@@ -322,7 +324,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleLeader(Player player, String[] args) {
+    private void handleTransfer(Player player, String[] args) {
         Team team = teamManager.getPlayerTeam(player);
         if (team == null) {
             plugin.sendPrefixed(player, plugin.msg("not-in-team"));
@@ -333,7 +335,7 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
             return;
         }
         if (args.length < 2) {
-            plugin.sendPrefixed(player, "&7Usage: &f/team leader <player>");
+            plugin.sendPrefixed(player, "&7Usage: &f/team transfer <player>");
             return;
         }
 
@@ -349,6 +351,134 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
         String targetName = team.getMemberName(targetId);
         teamManager.transferLeader(team, targetId);
         teamManager.broadcastTeamMessage(team, plugin.prefix() + plugin.msg("leader-transferred").replace("<player>", targetName));
+    }
+
+    private void handleAlly(Player player, String[] args) {
+        Team team = teamManager.getPlayerTeam(player);
+        if (team == null) {
+            plugin.sendPrefixed(player, plugin.msg("not-in-team"));
+            return;
+        }
+        if (!team.isLeader(player.getUniqueId())) {
+            plugin.sendPrefixed(player, plugin.msg("not-leader"));
+            return;
+        }
+
+        if (args.length < 2) {
+            if (team.hasAlly()) {
+                plugin.sendPrefixed(player, "&7Usage: &f/team ally break");
+            } else if (teamManager.getAllyRequest(team) != null) {
+                plugin.sendPrefixed(player, "&7Usage: &f/team ally <team|accept|deny>");
+            } else {
+                plugin.sendPrefixed(player, "&7Usage: &f/team ally <team>");
+            }
+            return;
+        }
+
+        String sub = args[1].toLowerCase();
+        switch (sub) {
+            case "accept" -> handleAllyAccept(player, team);
+            case "deny" -> handleAllyDeny(player, team);
+            case "break", "remove", "unally" -> handleAllyBreak(player, team);
+            default -> handleAllyRequest(player, team, args[1]);
+        }
+    }
+
+    private void handleAllyRequest(Player player, Team senderTeam, String targetTeamName) {
+        if (senderTeam.hasAlly()) {
+            plugin.sendPrefixed(player, plugin.msg("already-have-ally").replace("<ally>", senderTeam.getAllyTeam()));
+            return;
+        }
+
+        Team targetTeam = teamManager.getTeamByName(targetTeamName);
+        if (targetTeam == null) {
+            plugin.sendPrefixed(player, plugin.msg("team-not-found").replace("<team>", targetTeamName));
+            return;
+        }
+
+        if (senderTeam.equals(targetTeam)) {
+            plugin.sendPrefixed(player, plugin.msg("cannot-ally-self"));
+            return;
+        }
+
+        if (targetTeam.hasAlly()) {
+            plugin.sendPrefixed(player, plugin.msg("target-has-ally").replace("<team>", targetTeam.getName()));
+            return;
+        }
+
+        teamManager.createAllyRequest(senderTeam, targetTeam);
+        plugin.sendPrefixed(player, plugin.msg("ally-request-sent").replace("<team>", targetTeam.getName()));
+
+        Component allyMsg = MessageUtil.parse(plugin.allyPrefix() + plugin.msg("ally-request-received").replace("<team>", senderTeam.getName()))
+                .append(MessageUtil.acceptDenyButtons("/team ally accept", "/team ally deny"));
+        for (UUID memberId : targetTeam.getMemberIds()) {
+            Player member = Bukkit.getPlayer(memberId);
+            if (member != null && member.isOnline()) {
+                member.sendMessage(allyMsg);
+            }
+        }
+    }
+
+    private void handleAllyAccept(Player player, Team receiverTeam) {
+        if (receiverTeam.hasAlly()) {
+            plugin.sendPrefixed(player, plugin.msg("already-have-ally").replace("<ally>", receiverTeam.getAllyTeam()));
+            return;
+        }
+
+        TeamManager.AllyRequest req = teamManager.getAllyRequest(receiverTeam);
+        if (req == null) {
+            plugin.sendPrefixed(player, plugin.msg("no-ally-request"));
+            return;
+        }
+
+        Team senderTeam = teamManager.getTeamByName(req.senderTeam());
+        if (senderTeam == null) {
+            teamManager.removeAllyRequest(receiverTeam);
+            plugin.sendPrefixed(player, plugin.msg("team-not-found").replace("<team>", req.senderTeam()));
+            return;
+        }
+
+        if (senderTeam.hasAlly()) {
+            teamManager.removeAllyRequest(receiverTeam);
+            plugin.sendPrefixed(player, plugin.msg("target-has-ally").replace("<team>", senderTeam.getName()));
+            return;
+        }
+
+        teamManager.setAlliance(senderTeam, receiverTeam);
+        teamManager.broadcastAllyMessage(senderTeam, plugin.msg("ally-accepted").replace("<team>", receiverTeam.getName()));
+        teamManager.broadcastAllyMessage(receiverTeam, plugin.msg("ally-accepted").replace("<team>", senderTeam.getName()));
+    }
+
+    private void handleAllyDeny(Player player, Team receiverTeam) {
+        TeamManager.AllyRequest req = teamManager.getAllyRequest(receiverTeam);
+        if (req == null) {
+            plugin.sendPrefixed(player, plugin.msg("no-ally-request"));
+            return;
+        }
+
+        teamManager.removeAllyRequest(receiverTeam);
+        plugin.sendPrefixed(player, plugin.msg("ally-denied").replace("<team>", req.senderTeam()));
+
+        Team senderTeam = teamManager.getTeamByName(req.senderTeam());
+        if (senderTeam != null) {
+            teamManager.broadcastAllyMessage(senderTeam, plugin.msg("ally-denied-notify").replace("<team>", receiverTeam.getName()));
+        }
+    }
+
+    private void handleAllyBreak(Player player, Team team) {
+        if (!team.hasAlly()) {
+            plugin.sendPrefixed(player, plugin.msg("no-ally"));
+            return;
+        }
+
+        String allyName = team.getAllyTeam();
+        Team allyTeam = teamManager.getTeamByName(allyName);
+        teamManager.breakAlliance(team, allyTeam);
+
+        teamManager.broadcastAllyMessage(team, plugin.msg("ally-broken").replace("<team>", allyName));
+        if (allyTeam != null) {
+            teamManager.broadcastAllyMessage(allyTeam, plugin.msg("ally-broken").replace("<team>", team.getName()));
+        }
     }
 
     private void handlePvp(Player player, String[] args) {
@@ -510,35 +640,114 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
 
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(MessageUtil.parse("&8[&7Team Commands&8]"));
-        sender.sendMessage(MessageUtil.parse(" &f/team create <name> &8- &7Create a team"));
-        sender.sendMessage(MessageUtil.parse(" &f/team invite <player> &8- &7Invite someone"));
-        sender.sendMessage(MessageUtil.parse(" &f/team accept &8| &fdeny &8- &7Respond to invite"));
-        sender.sendMessage(MessageUtil.parse(" &f/team leave &8- &7Leave your team"));
-        sender.sendMessage(MessageUtil.parse(" &f/team kick <player> &8- &7Kick a member"));
-        sender.sendMessage(MessageUtil.parse(" &f/team leader <player> &8- &7Transfer leadership"));
-        sender.sendMessage(MessageUtil.parse(" &f/team pvp [on|off] &8- &7Start a PvP vote"));
-        sender.sendMessage(MessageUtil.parse(" &f/team pvp [yes|no] &8- &7Vote on PvP change"));
-        sender.sendMessage(MessageUtil.parse(" &f/team info [team] &8- &7View team details"));
-        sender.sendMessage(MessageUtil.parse(" &f/teams &8- &7List all teams"));
-        sender.sendMessage(MessageUtil.parse(" &f/tc [message] &8- &7Team chat"));
-        sender.sendMessage(MessageUtil.parse(" &f/ally <team|accept|deny|break> &8- &7Manage ally"));
+
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(MessageUtil.parse(" &f/teams &8- &7List all teams"));
+            sender.sendMessage(MessageUtil.parse(" &f/team info <team> &8- &7View team details"));
+            sender.sendMessage(MessageUtil.parse(" &f/team disband <team> &8- &7Force disband a team"));
+            sender.sendMessage(MessageUtil.parse(" &f/team reload &8- &7Reload configuration"));
+            return;
+        }
+
+        Team team = teamManager.getPlayerTeam(player.getUniqueId());
+
+        if (team == null) {
+            sender.sendMessage(MessageUtil.parse(" &f/team create <name> &8- &7Create a team"));
+            if (teamManager.getInvite(player.getUniqueId()) != null) {
+                sender.sendMessage(MessageUtil.parse(" &f/team accept &8| &fdeny &8- &7Respond to invite"));
+            }
+            sender.sendMessage(MessageUtil.parse(" &f/team info [team] &8- &7View team details"));
+            sender.sendMessage(MessageUtil.parse(" &f/teams &8- &7List all teams"));
+        } else {
+            boolean isLeader = team.isLeader(player.getUniqueId());
+
+            if (isLeader) {
+                sender.sendMessage(MessageUtil.parse(" &f/team invite <player> &8- &7Invite someone"));
+                sender.sendMessage(MessageUtil.parse(" &f/team kick <player> &8- &7Kick a member"));
+                sender.sendMessage(MessageUtil.parse(" &f/team transfer <player> &8- &7Transfer leadership"));
+                if (team.hasAlly()) {
+                    sender.sendMessage(MessageUtil.parse(" &f/team ally break &8- &7Break alliance"));
+                } else {
+                    if (teamManager.getAllyRequest(team) != null) {
+                        sender.sendMessage(MessageUtil.parse(" &f/team ally accept &8| &fdeny &8- &7Respond to ally request"));
+                    }
+                    sender.sendMessage(MessageUtil.parse(" &f/team ally <team> &8- &7Send ally request"));
+                }
+            }
+
+            if (voteManager.hasActiveVote(team)) {
+                sender.sendMessage(MessageUtil.parse(" &f/team pvp [yes|no] &8- &7Vote on active PvP change"));
+            } else {
+                sender.sendMessage(MessageUtil.parse(" &f/team pvp [on|off] &8- &7Start a PvP vote"));
+            }
+
+            sender.sendMessage(MessageUtil.parse(" &f/tc [message] &8- &7Team chat"));
+            if (team.hasAlly()) {
+                sender.sendMessage(MessageUtil.parse(" &f/ac [message] &8- &7Ally chat"));
+            }
+            sender.sendMessage(MessageUtil.parse(" &f/team info [team] &8- &7View team details"));
+            sender.sendMessage(MessageUtil.parse(" &f/teams &8- &7List all teams"));
+            sender.sendMessage(MessageUtil.parse(" &f/team leave &8- &7Leave your team"));
+
+            if (isLeader) {
+                sender.sendMessage(MessageUtil.parse(" &f/team disband &8- &7Disband your team"));
+            }
+        }
+
         if (sender.hasPermission("vanillateams.admin")) {
             sender.sendMessage(MessageUtil.parse(" &f/team disband <team> &8- &7Force disband"));
-        } else {
-            sender.sendMessage(MessageUtil.parse(" &f/team disband &8- &7Disband your team"));
+            sender.sendMessage(MessageUtil.parse(" &f/team reload &8- &7Reload configuration"));
         }
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(List.of(
-                    "create", "invite", "accept", "deny", "leave",
-                    "kick", "leader", "pvp", "info", "list", "chat", "disband"
-            ));
+            List<String> subs = new ArrayList<>();
+
+            if (!(sender instanceof Player player)) {
+                subs.add("info");
+                subs.add("list");
+                subs.add("disband");
+                subs.add("reload");
+                return subs.stream()
+                        .filter(s -> s.startsWith(args[0].toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+
+            Team team = teamManager.getPlayerTeam(player.getUniqueId());
+
+            if (team == null) {
+                subs.add("create");
+                if (teamManager.getInvite(player.getUniqueId()) != null) {
+                    subs.add("accept");
+                    subs.add("deny");
+                }
+                subs.add("info");
+                subs.add("list");
+            } else {
+                subs.add("leave");
+                subs.add("info");
+                subs.add("list");
+                subs.add("chat");
+                subs.add("pvp");
+
+                if (team.isLeader(player.getUniqueId())) {
+                    subs.add("invite");
+                    subs.add("kick");
+                    subs.add("transfer");
+                    subs.add("ally");
+                    subs.add("disband");
+                }
+            }
+
             if (sender.hasPermission("vanillateams.admin")) {
+                if (!subs.contains("disband")) {
+                    subs.add("disband");
+                }
                 subs.add("reload");
             }
+
             return subs.stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
@@ -547,12 +756,33 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
         if (args.length == 2) {
             String sub = args[0].toLowerCase();
             return switch (sub) {
-                case "pvp" -> List.of("on", "off", "yes", "no").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase()))
-                        .collect(Collectors.toList());
-                case "chat", "c" -> List.of("on", "off").stream()
-                        .filter(s -> s.startsWith(args[1].toLowerCase()))
-                        .collect(Collectors.toList());
+                case "pvp" -> {
+                    if (!(sender instanceof Player player)) yield Collections.emptyList();
+                    Team team = teamManager.getPlayerTeam(player.getUniqueId());
+                    if (team == null) yield Collections.emptyList();
+
+                    if (voteManager.hasActiveVote(team)) {
+                        VoteManager.PvpVote vote = voteManager.getActiveVote(team);
+                        if (vote != null && vote.isEligible(player.getUniqueId()) && !vote.hasVoted(player.getUniqueId())) {
+                            yield List.of("yes", "no").stream()
+                                    .filter(s -> s.startsWith(args[1].toLowerCase()))
+                                    .collect(Collectors.toList());
+                        }
+                        yield Collections.emptyList();
+                    } else {
+                        yield List.of("on", "off").stream()
+                                .filter(s -> s.startsWith(args[1].toLowerCase()))
+                                .collect(Collectors.toList());
+                    }
+                }
+                case "chat", "c" -> {
+                    if (sender instanceof Player player && teamManager.getPlayerTeam(player.getUniqueId()) != null) {
+                        yield List.of("on", "off").stream()
+                                .filter(s -> s.startsWith(args[1].toLowerCase()))
+                                .collect(Collectors.toList());
+                    }
+                    yield Collections.emptyList();
+                }
                 case "info" -> teamManager.getAllTeams().stream()
                         .map(Team::getName)
                         .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
@@ -563,17 +793,64 @@ public class TeamCommand implements CommandExecutor, TabCompleter {
                             .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
                             .collect(Collectors.toList())
                         : Collections.emptyList();
-                case "invite" -> Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
-                        .collect(Collectors.toList());
-                case "kick", "leader", "transfer" -> {
+                case "invite" -> {
                     if (sender instanceof Player p) {
-                        Team t = teamManager.getPlayerTeam(p);
-                        if (t != null) {
-                            yield t.getMembers().values().stream()
+                        Team t = teamManager.getPlayerTeam(p.getUniqueId());
+                        if (t != null && t.isLeader(p.getUniqueId())) {
+                            yield Bukkit.getOnlinePlayers().stream()
+                                    .filter(target -> teamManager.getPlayerTeam(target.getUniqueId()) == null)
+                                    .map(Player::getName)
                                     .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
                                     .collect(Collectors.toList());
+                        }
+                    }
+                    yield Collections.emptyList();
+                }
+                case "kick", "transfer", "leader" -> {
+                    if (sender instanceof Player p) {
+                        Team t = teamManager.getPlayerTeam(p.getUniqueId());
+                        if (t != null && t.isLeader(p.getUniqueId())) {
+                            yield t.getMembers().entrySet().stream()
+                                    .filter(entry -> !entry.getKey().equals(p.getUniqueId()))
+                                    .map(Map.Entry::getValue)
+                                    .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
+                                    .collect(Collectors.toList());
+                        }
+                    }
+                    yield Collections.emptyList();
+                }
+                case "accept", "deny" -> {
+                    if (sender instanceof Player p) {
+                        TeamManager.Invite invite = teamManager.getInvite(p.getUniqueId());
+                        if (invite != null && invite.teamName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                            yield List.of(invite.teamName());
+                        }
+                    }
+                    yield Collections.emptyList();
+                }
+                case "ally" -> {
+                    if (sender instanceof Player p) {
+                        Team t = teamManager.getPlayerTeam(p.getUniqueId());
+                        if (t != null && t.isLeader(p.getUniqueId())) {
+                            if (t.hasAlly()) {
+                                yield List.of("break").stream()
+                                        .filter(s -> s.startsWith(args[1].toLowerCase()))
+                                        .collect(Collectors.toList());
+                            } else {
+                                List<String> suggestions = new ArrayList<>();
+                                if (teamManager.getAllyRequest(t) != null) {
+                                    suggestions.add("accept");
+                                    suggestions.add("deny");
+                                }
+                                for (Team other : teamManager.getAllTeams()) {
+                                    if (!other.getName().equalsIgnoreCase(t.getName()) && !other.hasAlly()) {
+                                        suggestions.add(other.getName());
+                                    }
+                                }
+                                yield suggestions.stream()
+                                        .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
+                                        .collect(Collectors.toList());
+                            }
                         }
                     }
                     yield Collections.emptyList();

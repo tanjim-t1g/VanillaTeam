@@ -55,7 +55,7 @@ Team and ally messages stay private and are not sent to public DiscordSRV channe
 <details>
 <summary><strong>Team alliances</strong></summary>
 
-Each team can have one allied team. Send an alliance request using `/ally <team>` and accept or deny it using clickable buttons.
+Each team can have one allied team. Send an alliance request using `/team ally <team>` and accept or deny it using clickable buttons.
 
 </details>
 
@@ -74,24 +74,25 @@ Teams, leaders, members, and usernames are saved automatically in `database.db`,
 |---|---|---|
 | `/teams` | List all teams on the server | `vanillateams.use` |
 | `/team create <name>` | Create a team | `vanillateams.use` |
-| `/team invite <player>` | Invite someone to your team | `vanillateams.use` |
-| `/team accept <team>` | Accept an invite | `vanillateams.use` |
-| `/team deny <team>` | Decline an invite | `vanillateams.use` |
+| `/team invite <player>` | Invite someone to your team (leader only) | `vanillateams.use` |
+| `/team accept [team]` | Accept an invite | `vanillateams.use` |
+| `/team deny [team]` | Decline an invite | `vanillateams.use` |
 | `/team leave` | Leave your current team | `vanillateams.use` |
 | `/team kick <player>` | Kick a member (leader only) | `vanillateams.use` |
-| `/team leader <player>` | Transfer leadership (leader only) | `vanillateams.use` |
+| `/team transfer <player>` | Transfer leadership (leader only) | `vanillateams.use` |
+| `/team ally <team>` | Send an ally request to another team (leader only) | `vanillateams.use` |
+| `/team ally accept` | Accept an ally request (leader only) | `vanillateams.use` |
+| `/team ally deny` | Decline an ally request (leader only) | `vanillateams.use` |
+| `/team ally break` | Break your current alliance (leader only) | `vanillateams.use` |
 | `/team pvp [on\|off]` | Start a vote to toggle friendly fire | `vanillateams.use` |
 | `/team pvp [yes\|no]` | Vote on an active PvP vote | `vanillateams.use` |
 | `/team info [team]` | View team info and members | `vanillateams.use` |
+| `/team chat [on\|off]` | Toggle or send team chat message | `vanillateams.use` |
 | `/team disband` | Disband your team (leader only) | `vanillateams.use` |
 | `/team disband <team>` | Force disband a team | `vanillateams.admin` |
 | `/team reload` | Reload configuration | `vanillateams.admin` |
 | `/tc [message]` | Send a message to team chat or toggle mode | `vanillateams.use` |
 | `/ac [message]` | Send a message to ally chat or toggle mode | `vanillateams.use` |
-| `/ally <team>` | Send an ally request to another team | `vanillateams.use` |
-| `/ally accept` | Accept an ally request | `vanillateams.use` |
-| `/ally deny` | Decline an ally request | `vanillateams.use` |
-| `/ally break` | Break your current alliance | `vanillateams.use` |
 
 ---
 

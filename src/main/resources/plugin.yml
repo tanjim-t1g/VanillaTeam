@@ -9,7 +9,7 @@ softdepend: [ DiscordSRV, MoonCycle ]
 commands:
   team:
     description: Manage your team
-    usage: /team <create|invite|accept|deny|leave|kick|leader|pvp|info|list|chat|disband>
+    usage: /team <create|invite|accept|deny|leave|kick|transfer|ally|pvp|info|list|chat|disband>
     permission: vanillateams.use
   teams:
     description: View all teams on the server

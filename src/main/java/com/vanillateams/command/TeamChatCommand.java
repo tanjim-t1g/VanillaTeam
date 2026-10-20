@@ -63,6 +63,13 @@ public class TeamChatCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            return Collections.emptyList();
+        }
+        Team team = teamManager.getPlayerTeam(player.getUniqueId());
+        if (team == null) {
+            return Collections.emptyList();
+        }
         if (args.length == 1) {
             return List.of("on", "off").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
