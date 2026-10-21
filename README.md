@@ -83,8 +83,8 @@ Teams, leaders, members, and usernames are saved automatically in `database.db`,
 
 ## Configuration
 
-<details>
-<summary><strong>Default config.yml</strong></summary>
+<details open>
+<summary><strong>Settings</strong></summary>
 <br>
 
 ```yaml
@@ -96,7 +96,15 @@ settings:
   ally-request-expire-seconds: 60
   default-team-pvp: true
   pvp-vote-timeout-seconds: 30
+```
 
+</details>
+
+<details>
+<summary><strong>Messages</strong></summary>
+<br>
+
+```yaml
 messages:
   prefix: "&8[&7Team&8] "
   ally-prefix: "&8[&7Ally&8] "
