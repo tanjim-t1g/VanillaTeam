@@ -25,6 +25,8 @@ public class DiscordSRVListener {
         }
     }
 
+    // Cancel chat pre-processing if player is talking in team or ally chat
+    // to prevent DiscordSRV from broadcasting private team messages to public Discord channels.
     @Subscribe
     public void onGameChatMessagePreProcess(GameChatMessagePreProcessEvent event) {
         Player player = event.getPlayer();

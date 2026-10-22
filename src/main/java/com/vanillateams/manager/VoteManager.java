@@ -24,6 +24,9 @@ public class VoteManager {
         this.teamManager = teamManager;
     }
 
+    /**
+     * Represents an active friendly-fire vote proposal for a team.
+     */
     public static class PvpVote {
         private final String teamName;
         private final boolean proposedState;
@@ -56,6 +59,7 @@ public class VoteManager {
             return (votedYes.size() + votedNo.size()) >= eligibleVoters.size();
         }
 
+        // Passes if strictly more 'yes' votes were cast than 'no' votes (ties fail)
         public boolean passed() {
             return votedYes.size() > votedNo.size();
         }
@@ -104,6 +108,7 @@ public class VoteManager {
     }
 
     public void startVote(Team team, Player initiator, boolean proposedState) {
+        // Only online teammates can vote
         Set<UUID> eligible = new HashSet<>();
         for (UUID memberId : team.getMemberIds()) {
             Player p = Bukkit.getPlayer(memberId);
@@ -112,6 +117,7 @@ public class VoteManager {
             }
         }
 
+        // If the player is alone online, change immediately without opening a vote
         if (eligible.size() <= 1) {
             teamManager.setTeamPvp(team, proposedState);
             String state = proposedState ? "&aON" : "&cOFF";

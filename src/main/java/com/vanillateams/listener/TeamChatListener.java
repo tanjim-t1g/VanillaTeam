@@ -21,6 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TeamChatListener implements Listener {
     private final VanillaTeams plugin;
     private final TeamManager teamManager;
+
+    // Track handled player UUIDs between Paper's AsyncChatEvent and legacy AsyncPlayerChatEvent
+    // to prevent messages from being delivered twice when running on dual-event server builds.
     private final Set<UUID> handledChat = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public TeamChatListener(VanillaTeams plugin, TeamManager teamManager) {
@@ -70,6 +73,7 @@ public class TeamChatListener implements Listener {
 
         event.setCancelled(true);
 
+        // Skip if this message was already handled by AsyncChatEvent
         if (handledChat.remove(player.getUniqueId())) {
             return;
         }
@@ -93,11 +97,13 @@ public class TeamChatListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        // Sync username changes on join (e.g., if a player renamed their account)
         teamManager.updatePlayerNameOnJoin(event.getPlayer());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        // Clean up toggle states and handled chat markers on disconnect
         teamManager.disableTeamChat(event.getPlayer().getUniqueId());
         teamManager.disableAllyChat(event.getPlayer().getUniqueId());
         handledChat.remove(event.getPlayer().getUniqueId());

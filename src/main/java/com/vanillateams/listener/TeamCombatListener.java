@@ -20,10 +20,15 @@ public class TeamCombatListener implements Listener {
         this.teamManager = teamManager;
     }
 
+    /**
+     * Intercepts entity damage at LOWEST priority to cancel friendly-fire
+     * before combat taggers, damage-indicators, or logging plugins process the hit.
+     */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player victim)) return;
 
+        // Resolve direct attacks or projectile shooters (arrows, tridents, splash potions)
         Player attacker = null;
         if (event.getDamager() instanceof Player direct) {
             attacker = direct;
@@ -39,6 +44,7 @@ public class TeamCombatListener implements Listener {
         Team victimTeam = teamManager.getPlayerTeam(victim.getUniqueId());
         if (!attackerTeam.equals(victimTeam)) return;
 
+        // If PvP is disabled within the team, block damage and alert the attacker
         if (!attackerTeam.isPvpEnabled()) {
             event.setCancelled(true);
             String msg = plugin.msg("friendly-fire-blocked");

@@ -1,10 +1,19 @@
 settings:
+  # Minimum and maximum character length for team names (letters, numbers, underscores)
   min-name-length: 2
   max-name-length: 16
+
+  # Maximum number of players allowed in a single team
   max-members: 10
+
+  # Invitation and alliance request timeout in seconds
   invite-expire-seconds: 60
   ally-request-expire-seconds: 60
+
+  # Default friendly fire status for newly created teams (true = PvP on, false = PvP protected)
   default-team-pvp: true
+
+  # Duration in seconds a friendly fire vote stays open before auto-resolving
   pvp-vote-timeout-seconds: 30
 
 messages:
