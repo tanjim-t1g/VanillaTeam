@@ -213,3 +213,9 @@ messages:
 
 - Paper / Purpur 1.21.4+ (or Paper 26.x)
 - Java 21+ (Java 25 if running 26.1+)
+
+<p align="center">
+  <a href="https://ko-fi.com/I6C527B4XK" target="_blank">
+    <img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" height="38" alt="Support me on Ko-fi" />
+  </a>
+</p>
