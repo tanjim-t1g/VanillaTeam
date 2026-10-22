@@ -13,18 +13,30 @@ public final class MessageUtil {
     private static final LegacyComponentSerializer LEGACY_AMPERSAND = LegacyComponentSerializer.builder()
             .character('&')
             .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
             .build();
 
     private MessageUtil() {
     }
 
+    /**
+     * Parses a string into an Adventure Component.
+     * Supports legacy color codes (&c, &#rrggbb) and falls back to MiniMessage tags.
+     */
     public static Component parse(String input) {
         if (input == null || input.isEmpty()) {
             return Component.empty();
         }
-        String legacyConverted = convertLegacyToMiniMessage(input);
-        return MINI_MESSAGE.deserialize(legacyConverted)
-                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+
+        Component component;
+        if (input.contains("&") || input.contains("§")) {
+            String normalized = input.replace('§', '&');
+            component = LEGACY_AMPERSAND.deserialize(normalized);
+        } else {
+            component = MINI_MESSAGE.deserialize(input);
+        }
+
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
     public static Component button(String label, String command, NamedTextColor color) {
@@ -47,14 +59,5 @@ public final class MessageUtil {
         return button("Yes", yesCmd, NamedTextColor.GREEN)
                 .append(Component.text(" "))
                 .append(button("No", noCmd, NamedTextColor.RED));
-    }
-
-    private static String convertLegacyToMiniMessage(String text) {
-        if (!text.contains("&") && !text.contains("§")) {
-            return text;
-        }
-        String normalized = text.replace('§', '&');
-        Component legacyComp = LEGACY_AMPERSAND.deserialize(normalized);
-        return MINI_MESSAGE.serialize(legacyComp).replace("\\<", "<");
     }
 }
