@@ -25,6 +25,10 @@ public class DatabaseManager {
         this.plugin = plugin;
     }
 
+    /**
+     * Initializes the SQLite connection and creates required tables.
+     * Note: SQLite disables foreign keys by default, so PRAGMA foreign_keys = ON is required.
+     */
     public synchronized void init() {
         try {
             if (!plugin.getDataFolder().exists()) {
@@ -35,6 +39,9 @@ public class DatabaseManager {
             connection = DriverManager.getConnection(url);
 
             try (Statement stmt = connection.createStatement()) {
+                // Ensure foreign key constraints (like ON DELETE CASCADE) are enforced by SQLite
+                stmt.execute("PRAGMA foreign_keys = ON;");
+
                 stmt.execute("""
                     CREATE TABLE IF NOT EXISTS teams (
                         name TEXT PRIMARY KEY COLLATE NOCASE,
@@ -54,6 +61,9 @@ public class DatabaseManager {
                         FOREIGN KEY (team_name) REFERENCES teams(name) ON DELETE CASCADE
                     );
                 """);
+
+                // Speed up member lookups by team
+                stmt.execute("CREATE INDEX IF NOT EXISTS idx_team_members_team ON team_members(team_name);");
             }
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to initialize SQLite database", e);
