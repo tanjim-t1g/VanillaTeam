@@ -4,7 +4,6 @@ A lightweight vanilla-friendly team plugin for Paper and Purpur servers.
 
 No `/team home`, no warps, and no virtual team chests. Just basic teams, team chat, alliances, and vote-based friendly fire.
 
----
 
 ## Supported server software
 
@@ -23,7 +22,6 @@ No `/team home`, no warps, and no virtual team chests. Just basic teams, team ch
 
 <br>
 
----
 
 ## Features
 
@@ -78,8 +76,6 @@ Each team can have one allied team. Send an alliance request using `/team ally <
 Teams, leaders, members, and usernames are saved automatically in `database.db`, preserving team data across server restarts.
 
 </details>
-
----
 
 ## Configuration
 
@@ -175,7 +171,6 @@ messages:
 
 </details>
 
----
 
 ## Commands
 
@@ -207,13 +202,15 @@ messages:
 
 </details>
 
----
 
 ## Requirements
 
 - Paper / Purpur 1.21.4+ (or Paper 26.x)
 - Java 21+ (Java 25 if running 26.1+)
 
+## Support
+
+If you enjoy this plugin and would like to support its development, consider buying me a coffee:
 <p align="center">
   <a href="https://ko-fi.com/I6C527B4XK" target="_blank">
     <img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" height="38" alt="Support me on Ko-fi" />
