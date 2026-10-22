@@ -179,67 +179,31 @@ messages:
 
 ## Commands
 
-<details open>
-<summary><strong>Team Management</strong></summary>
-<br>
-
-| Command | Description | In-Game Preview |
-|---|---|:---:|
-| `/team create <name>` | Creates a new team.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamCreate1.png" width="250" alt="Create Team 1"/> <img src="assets/images/TeamCreate2.png" width="250" alt="Create Team 2"/> |
-| `/team invite <player>` | Sends an invitation to join your team.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <sub><b>Leader perspective:</b></sub><br><img src="assets/images/TeamInvite1.png" width="250" alt="Invite 1"/><br><sub><b>Target perspective:</b></sub><br><img src="assets/images/TeamInvite2-P2.png" width="250" alt="Invite 2"/> |
-| `/team accept <team>` | Accepts a pending team invitation.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamAccept-P2.png" width="250" alt="Accept 1"/> <img src="assets/images/TeamAccept2-P2.png" width="250" alt="Accept 2"/> |
-| `/team deny <team>` | Declines a pending team invitation.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamDeny1-P2.png" width="250" alt="Deny 1"/> <img src="assets/images/Teamdeny2-P2.png" width="250" alt="Deny 2"/> |
-| `/team leave` | Leaves your current team.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamLeave1-P2.png" width="250" alt="Leave 1"/> <img src="assets/images/TeamLeave2-P2.png" width="250" alt="Leave 2"/> |
-| `/team kick <player>` | Removes a member from your team.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamKick-P1.png" width="250" alt="Kick 1"/> <img src="assets/images/TeamKick2-P1.png" width="250" alt="Kick 2"/> |
-| `/team transfer <player>`<br>*(or `/team leader <player>`)* | Transfers team leadership to another member.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamTransfer1-P1.png" width="250" alt="Transfer 1"/> <img src="assets/images/TeamTransfer2-P1.png" width="250" alt="Transfer 2"/> |
-| `/team info [team]` | Displays team stats, leader, and members.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamInfo.png" width="280" alt="Team Info"/> |
-| `/team disband` | Disbands your team completely.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamDisband1.png" width="250" alt="Disband 1"/> <img src="assets/images/TeamDisband2.png" width="250" alt="Disband 2"/> |
-| `/teams` | Lists all existing teams on the server.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <sub>*(List view)*</sub> |
-
-</details>
-
 <details>
-<summary><strong>Friendly Fire Voting</strong></summary>
+<summary><strong>Commands and Previews</strong></summary>
 <br>
 
-| Command | Description | In-Game Preview |
-|---|---|:---:|
-| `/team pvp on`<br>`/team pvp off` | Starts a team-wide vote to enable or disable friendly fire.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamVoting1.png" width="280" alt="Friendly Fire Voting"/> |
-| `/team pvp yes`<br>`/team pvp no` | Casts your vote on an active friendly fire proposal.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <sub>*(Clickable buttons in chat)*</sub> |
-
-</details>
-
-<details>
-<summary><strong>Team and Ally Chat</strong></summary>
-<br>
-
-| Command | Description | In-Game Preview |
-|---|---|:---:|
-| `/tc <message>`<br>`/tc` | Sends a message to team chat or toggles team chat mode.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamTc.png" width="250" alt="Team Chat Toggle"/> <img src="assets/images/TeamMessage.png" width="250" alt="Team Message"/><br><img src="assets/images/TeamTc2.png" width="250" alt="Team Chat Mode"/> |
-| `/ac <message>`<br>`/ac` | Sends a message to ally chat or toggles ally chat mode.<br><br><sub><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/AllyChat.png" width="280" alt="Ally Chat"/> |
-
-</details>
-
-<details>
-<summary><strong>Alliances</strong></summary>
-<br>
-
-| Command | Description | In-Game Preview |
-|---|---|:---:|
-| `/team ally <team>`<br>*(or `/ally <team>`)* | Sends an alliance request to another team.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamAllyAccept.png" width="280" alt="Alliance Request"/> |
-| `/team ally accept`<br>`/team ally deny` | Responds to an incoming alliance request.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <sub>*(Clickable <b>[Accept]</b> / <b>[Deny]</b> buttons)*</sub> |
-| `/team ally break`<br>*(or `/ally break`)* | Ends your current alliance.<br><br><sub><b>Role:</b> Leader only<br><b>Permission:</b> `vanillateams.use`</sub> | <img src="assets/images/TeamAllyBreak.png" width="280" alt="Break Alliance"/> |
-
-</details>
-
-<details>
-<summary><strong>Administration</strong></summary>
-<br>
-
-| Command | Description | In-Game Preview |
-|---|---|:---:|
-| `/team disband <team>` | Force-disbands a specific team.<br><br><sub><b>Permission:</b> `vanillateams.admin`</sub> | <sub>*(Console / Operator command)*</sub> |
-| `/team reload` | Reloads the plugin configuration.<br><br><sub><b>Permission:</b> `vanillateams.admin`</sub> | <sub>*(Console / Operator command)*</sub> |
+| Command | Description | Preview *(Click to zoom)* |
+|:---|:---|:---:|
+| `/team create <name>` | Create a new team | [<img src="assets/images/TeamCreate1.png" width="230" alt="Create 1"/>](assets/images/TeamCreate1.png) [<img src="assets/images/TeamCreate2.png" width="230" alt="Create 2"/>](assets/images/TeamCreate2.png) |
+| `/team invite <player>` | Send invite to an online player *(Leader only)* | [<img src="assets/images/TeamInvite1.png" width="230" alt="Invite 1"/>](assets/images/TeamInvite1.png) [<img src="assets/images/TeamInvite2-P2.png" width="230" alt="Invite 2"/>](assets/images/TeamInvite2-P2.png) |
+| `/team accept [team]` | Accept pending team invitation | [<img src="assets/images/TeamAccept-P2.png" width="230" alt="Accept 1"/>](assets/images/TeamAccept-P2.png) [<img src="assets/images/TeamAccept2-P2.png" width="230" alt="Accept 2"/>](assets/images/TeamAccept2-P2.png) |
+| `/team deny [team]` | Decline pending team invitation | [<img src="assets/images/TeamDeny1-P2.png" width="230" alt="Deny 1"/>](assets/images/TeamDeny1-P2.png) [<img src="assets/images/Teamdeny2-P2.png" width="230" alt="Deny 2"/>](assets/images/Teamdeny2-P2.png) |
+| `/team leave` | Leave your current team | [<img src="assets/images/TeamLeave1-P2.png" width="230" alt="Leave 1"/>](assets/images/TeamLeave1-P2.png) [<img src="assets/images/TeamLeave2-P2.png" width="230" alt="Leave 2"/>](assets/images/TeamLeave2-P2.png) |
+| `/team kick <player>` | Remove a member from your team *(Leader only)* | [<img src="assets/images/TeamKick-P1.png" width="230" alt="Kick 1"/>](assets/images/TeamKick-P1.png) [<img src="assets/images/TeamKick2-P1.png" width="230" alt="Kick 2"/>](assets/images/TeamKick2-P1.png) |
+| `/team transfer <player>`<br><sub>*(or `/team leader`)*</sub> | Transfer team leadership *(Leader only)* | [<img src="assets/images/TeamTransfer1-P1.png" width="230" alt="Transfer 1"/>](assets/images/TeamTransfer1-P1.png) [<img src="assets/images/TeamTransfer2-P1.png" width="230" alt="Transfer 2"/>](assets/images/TeamTransfer2-P1.png) |
+| `/team info [team]` | View team details and member list | [<img src="assets/images/TeamInfo.png" width="280" alt="Team Info"/>](assets/images/TeamInfo.png) |
+| `/team disband` | Disband your team completely *(Leader only)* | [<img src="assets/images/TeamDisband1.png" width="230" alt="Disband 1"/>](assets/images/TeamDisband1.png) [<img src="assets/images/TeamDisband2.png" width="230" alt="Disband 2"/>](assets/images/TeamDisband2.png) |
+| `/teams` | List all teams on the server | — |
+| `/team pvp [on\|off]` | Start a vote to enable or disable friendly fire | [<img src="assets/images/TeamVoting1.png" width="280" alt="PvP Vote"/>](assets/images/TeamVoting1.png) |
+| `/team pvp [yes\|no]` | Cast your vote on an active friendly fire proposal | — |
+| `/tc [message]` | Send team message or toggle team chat mode | [<img src="assets/images/TeamTc.png" width="230" alt="TC Toggle"/>](assets/images/TeamTc.png) [<img src="assets/images/TeamMessage.png" width="230" alt="TC Msg"/>](assets/images/TeamMessage.png) |
+| `/ac [message]` | Send ally message or toggle ally chat mode | [<img src="assets/images/AllyChat.png" width="280" alt="Ally Chat"/>](assets/images/AllyChat.png) |
+| `/team ally <team>`<br><sub>*(or `/ally <team>`)*</sub> | Send alliance request to another team *(Leader only)* | [<img src="assets/images/TeamAllyAccept.png" width="280" alt="Ally Request"/>](assets/images/TeamAllyAccept.png) |
+| `/team ally accept\|deny` | Respond to an incoming alliance request *(Leader only)* | — |
+| `/team ally break` | Break your current team alliance *(Leader only)* | [<img src="assets/images/TeamAllyBreak.png" width="280" alt="Break Ally"/>](assets/images/TeamAllyBreak.png) |
+| `/team disband <team>` | Force-disband any team *(Admin only)* | — |
+| `/team reload` | Reload configuration *(Admin only)* | — |
 
 </details>
 
