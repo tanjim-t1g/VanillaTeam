@@ -49,10 +49,10 @@ Team damage is handled at the lowest event priority, allowing VanillaTeams to ca
 <details>
 <summary><strong>Private team and ally chat</strong></summary>
 
-- `/tc <message>` — Send a private team message.
-- `/tc` — Toggle team chat mode.
-- `/ac <message>` — Send a private ally message.
-- `/ac` — Toggle ally chat mode.
+- `/tc <message>` - Send a private team message.
+- `/tc` - Toggle team chat mode.
+- `/ac <message>` - Send a private ally message.
+- `/ac` - Toggle ally chat mode.
 
 </details>
 
@@ -174,7 +174,7 @@ messages:
 
 ## Commands
 
-<details>
+<details open>
 <summary><strong>Commands and Previews</strong></summary>
 <br>
 
@@ -189,24 +189,24 @@ messages:
 | `/team transfer <player>`<br><sub>*(or `/team leader`)*</sub> | Transfer team leadership *(Leader only)* | [<img src="assets/images/TeamTransfer1-P1.png" width="230" alt="Transfer 1"/>](assets/images/TeamTransfer1-P1.png) [<img src="assets/images/TeamTransfer2-P1.png" width="230" alt="Transfer 2"/>](assets/images/TeamTransfer2-P1.png) |
 | `/team info [team]` | View team details and member list | [<img src="assets/images/TeamInfo.png" width="280" alt="Team Info"/>](assets/images/TeamInfo.png) |
 | `/team disband` | Disband your team completely *(Leader only)* | [<img src="assets/images/TeamDisband1.png" width="230" alt="Disband 1"/>](assets/images/TeamDisband1.png) [<img src="assets/images/TeamDisband2.png" width="230" alt="Disband 2"/>](assets/images/TeamDisband2.png) |
-| `/teams` | List all teams on the server | — |
+| `/teams` | List all teams on the server | - |
 | `/team pvp [on\|off]` | Start a vote to enable or disable friendly fire | [<img src="assets/images/TeamVoting1.png" width="280" alt="PvP Vote"/>](assets/images/TeamVoting1.png) |
-| `/team pvp [yes\|no]` | Cast your vote on an active friendly fire proposal | — |
+| `/team pvp [yes\|no]` | Cast your vote on an active friendly fire proposal | - |
 | `/tc [message]` | Send team message or toggle team chat mode | [<img src="assets/images/TeamTc.png" width="230" alt="TC Toggle"/>](assets/images/TeamTc.png) [<img src="assets/images/TeamMessage.png" width="230" alt="TC Msg"/>](assets/images/TeamMessage.png) |
 | `/ac [message]` | Send ally message or toggle ally chat mode | [<img src="assets/images/AllyChat.png" width="280" alt="Ally Chat"/>](assets/images/AllyChat.png) |
 | `/team ally <team>`<br><sub>*(or `/ally <team>`)*</sub> | Send alliance request to another team *(Leader only)* | [<img src="assets/images/TeamAllyAccept.png" width="280" alt="Ally Request"/>](assets/images/TeamAllyAccept.png) |
-| `/team ally accept\|deny` | Respond to an incoming alliance request *(Leader only)* | — |
+| `/team ally accept\|deny` | Respond to an incoming alliance request *(Leader only)* | - |
 | `/team ally break` | Break your current team alliance *(Leader only)* | [<img src="assets/images/TeamAllyBreak.png" width="280" alt="Break Ally"/>](assets/images/TeamAllyBreak.png) |
-| `/team disband <team>` | Force-disband any team *(Admin only)* | — |
-| `/team reload` | Reload configuration *(Admin only)* | — |
+| `/team disband <team>` | Force-disband any team *(Admin only)* | - |
+| `/team reload` | Reload configuration *(Admin only)* | - |
 
 </details>
 
 
 ## Requirements
 
-- Paper / Purpur 1.21.4+ (or Paper 26.x)
-- Java 21+ (Java 25 if running 26.1+)
+- Paper / Purpur 1.21.4+
+- Java 21+
 
 ## Support
 
